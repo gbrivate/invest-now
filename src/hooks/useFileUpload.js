@@ -9,8 +9,11 @@ import XLSX from 'xlsx';
 import { b3Fiis } from '../api';
 import { Date } from '../utils';
 
+import googleFinance from 'google-finance';
+
 const useFileUpload = () => {
     const [operations, setOperations] = useState([]);
+    const [simbols, setSimbols] = useState([]);
     const [customerName, setCustomerName] = useState('');
     const [fileCEI, setFileCEI] = useState(null);
     const [loadingFile, setLoadingFile] = useState(false);
@@ -22,6 +25,7 @@ const useFileUpload = () => {
     useEffect(() => {
         setOperations([]);
         setTotal(0);
+        setPurchaseCost(0);
         if (fileCEI) {
             fileCEI.SheetNames.forEach(sheetName => {
                 const rowObj = XLSX.utils.sheet_to_row_object_array(fileCEI.Sheets[sheetName]);
@@ -47,14 +51,26 @@ const useFileUpload = () => {
                         aporte.total = line.__EMPTY_10; // total
                         aporte.isFII = !!b3Fiis.find(f => f.code === aporte.ticket);
                         setOperations(previousState => previousState.concat(aporte));
-                        setTotal(pr => aporte.operacao === 'C' ? pr + aporte.total : pr - aporte.total)
+                        setPurchaseCost(pr => aporte.operacao === 'C' ? pr + aporte.total : pr - aporte.total);
+                        setSimbols(prev => prev.concat(aporte.ticket));
                     }
                 })
             });
         }
         setLoadingFile(false);
-        setOperations(prev=> prev.sort((a, b) => b.data - a.data));
+        setOperations(prev => prev.sort((a, b) => b.data - a.data));
     }, [fileCEI]);
+    
+    useEffect(()=> {
+        if (simbols && simbols.length > 0) {
+            googleFinance.companyNews({
+                symbols: simbols
+            }, function (err, result) {
+                if (err) { throw err; }
+                console.log(result);
+            });
+        }
+    },[simbols])
     
     const onChangeHandler = event => {
         setOperations([]);
