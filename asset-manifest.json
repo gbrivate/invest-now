@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/invest-now/static/css/main.eef5e0e6.chunk.css",
+    "main.js": "/invest-now/static/js/main.30a309ab.chunk.js",
+    "main.js.map": "/invest-now/static/js/main.30a309ab.chunk.js.map",
+    "runtime-main.js": "/invest-now/static/js/runtime-main.e6f34797.js",
+    "runtime-main.js.map": "/invest-now/static/js/runtime-main.e6f34797.js.map",
+    "static/css/2.f81545b2.chunk.css": "/invest-now/static/css/2.f81545b2.chunk.css",
+    "static/js/2.be9cf2e9.chunk.js": "/invest-now/static/js/2.be9cf2e9.chunk.js",
+    "static/js/2.be9cf2e9.chunk.js.map": "/invest-now/static/js/2.be9cf2e9.chunk.js.map",
+    "index.html": "/invest-now/index.html",
+    "precache-manifest.e044ef43606a2de091987ce5477af189.js": "/invest-now/precache-manifest.e044ef43606a2de091987ce5477af189.js",
+    "service-worker.js": "/invest-now/service-worker.js",
+    "static/css/2.f81545b2.chunk.css.map": "/invest-now/static/css/2.f81545b2.chunk.css.map",
+    "static/css/main.eef5e0e6.chunk.css.map": "/invest-now/static/css/main.eef5e0e6.chunk.css.map",
+    "static/js/2.be9cf2e9.chunk.js.LICENSE.txt": "/invest-now/static/js/2.be9cf2e9.chunk.js.LICENSE.txt",
+    "static/media/index.css": "/invest-now/static/media/roboto-latin-900italic.ebf6d164.woff2"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.e6f34797.js",
+    "static/css/2.f81545b2.chunk.css",
+    "static/js/2.be9cf2e9.chunk.js",
+    "static/css/main.eef5e0e6.chunk.css",
+    "static/js/main.30a309ab.chunk.js"
+  ]
+}
