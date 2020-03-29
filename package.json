@@ -45,5 +45,8 @@
       "last 1 safari version"
     ]
   },
-  "homepage": "http://gbrivate.github.io/invest-now"
+  "homepage": "http://gbrivate.github.io/invest-now",
+  "devDependencies": {
+    "gh-pages": "^2.2.0"
+  }
 }

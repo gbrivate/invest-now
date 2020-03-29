@@ -20,6 +20,8 @@ const useFileUpload = () => {
     const [profit, setProfit] = useState(0);
     
     useEffect(() => {
+        setOperations([]);
+        setTotal(0);
         if (fileCEI) {
             fileCEI.SheetNames.forEach(sheetName => {
                 const rowObj = XLSX.utils.sheet_to_row_object_array(fileCEI.Sheets[sheetName]);
@@ -51,7 +53,7 @@ const useFileUpload = () => {
             });
         }
         setLoadingFile(false);
-        setOperations(prev=> prev.sort((a, b) => b.data - a.data));
+        //setOperations(prev=> prev.sort((a, b) => b.data - a.data));
     }, [fileCEI]);
     
     const onChangeHandler = event => {
