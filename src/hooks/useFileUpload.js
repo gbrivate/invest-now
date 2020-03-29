@@ -53,7 +53,7 @@ const useFileUpload = () => {
             });
         }
         setLoadingFile(false);
-        //setOperations(prev=> prev.sort((a, b) => b.data - a.data));
+        setOperations(prev=> prev.sort((a, b) => b.data - a.data));
     }, [fileCEI]);
     
     const onChangeHandler = event => {
