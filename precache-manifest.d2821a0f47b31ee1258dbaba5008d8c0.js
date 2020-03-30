@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "abecf12e033c43d4fff1afe6dece3e4f",
+    "revision": "57b0a5cf40fa0e137d56a3c89364068c",
     "url": "/invest-now/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/invest-now/static/css/2.f81545b2.chunk.css"
   },
   {
-    "revision": "75243f0ca6cf2366fd68",
+    "revision": "266a131fcde5ecbd059b",
     "url": "/invest-now/static/css/main.eef5e0e6.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/invest-now/static/js/2.7d8bc297.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "75243f0ca6cf2366fd68",
-    "url": "/invest-now/static/js/main.5b61cd41.chunk.js"
+    "revision": "266a131fcde5ecbd059b",
+    "url": "/invest-now/static/js/main.0d6ccc2c.chunk.js"
   },
   {
     "revision": "f3185461fd2730e3d891",
