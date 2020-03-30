@@ -66,7 +66,7 @@ const App = () => {
     const classesGrid = useStylesGrid();
     const {
         customerName, operations, onChangeHandler,
-        total, purchaseCost, profit, dividends, setFileCEI, loadingFile
+        total, purchaseCost, profit, dividends, stocks, loadingFile
     } = useFileUpload();
     
     function FormRow() {
@@ -171,6 +171,36 @@ const App = () => {
                 <Grid item xs>
                     <Paper>
                         <Card className={classes.root}>
+                            <CardHeader title="Posição Atual"/>
+                            <TableContainer component={Paper} className="auto-scroll">
+                                <Table stickyHeader className={classes.table} size="small"
+                                       aria-labelledby="Posição Atual">
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell align="center">Ativo</TableCell>
+                                            <TableCell align="center">Quantidade</TableCell>
+                                            <TableCell align="right">Valor</TableCell>
+                                            <TableCell align="right">Total</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {stocks.map((operation, index) => (
+                                            <TableRow key={index}>
+                                                <TableCell align="center">{operation.ticket}</TableCell>
+                                                <TableCell align="center">{operation.qtde}</TableCell>
+                                                <TableCell align="right">{REAL(operation.price)}</TableCell>
+                                                <TableCell align="right">{REAL(operation.total)}</TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        </Card>
+                    </Paper>
+                </Grid>
+                <Grid item xs>
+                    <Paper>
+                        <Card className={classes.root}>
                             <CardHeader title="Operações"/>
                             <TableContainer component={Paper} className="auto-scroll">
                                 <Table stickyHeader className={classes.table} size="small" aria-labelledby="Operações">
@@ -191,7 +221,7 @@ const App = () => {
                                                 <TableCell component="th" scope="row">{operation.ticket}</TableCell>
                                                 <TableCell align="center">
                                                     <Chip
-                                                    className={operation.operacao === 'C' ? 'chip-buy' : 'chip-sell'}
+                                                        className={operation.operacao === 'C' ? 'chip-buy' : 'chip-sell'}
                                                         label={operation.operacao === 'C' ? 'Compra' : 'Venda'}
                                                     />
                                                 </TableCell>

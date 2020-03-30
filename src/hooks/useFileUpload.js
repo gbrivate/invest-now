@@ -7,20 +7,18 @@ import { useEffect, useState } from 'react';
 
 import XLSX from 'xlsx';
 import { b3Fiis } from '../api';
-import { Date } from '../utils';
-
-import googleFinance from 'google-finance';
+import { Date, CURRENCY, SUM, DIVIDER } from '../utils';
 
 const useFileUpload = () => {
     const [operations, setOperations] = useState([]);
-    const [simbols, setSimbols] = useState([]);
+    const [stocks, setStocks] = useState([]);
     const [customerName, setCustomerName] = useState('');
     const [fileCEI, setFileCEI] = useState(null);
     const [loadingFile, setLoadingFile] = useState(false);
-    const [total, setTotal] = useState(0);
-    const [dividends, setDividends] = useState(0);
-    const [purchaseCost, setPurchaseCost] = useState(0);
-    const [profit, setProfit] = useState(0);
+    const [total, setTotal] = useState(0.0);
+    const [dividends, setDividends] = useState(0.0);
+    const [purchaseCost, setPurchaseCost] = useState(0.0);
+    const [profit, setProfit] = useState(0.0);
     
     useEffect(() => {
         setOperations([]);
@@ -32,6 +30,9 @@ const useFileUpload = () => {
                 const indexBegin = rowObj.findIndex(row => row.__EMPTY_1 === 'Data Negócio');
                 const indexLast = rowObj.findIndex(row => row.__EMPTY_1 === 'Subreports within table/matrix cells are ignored.');
                 let isCustomerName = false;
+                
+                let stocksOperation = [];
+                
                 rowObj.forEach((line, index) => {
                     if (isCustomerName) {
                         setCustomerName(line.__EMPTY_1.toLowerCase());
@@ -40,37 +41,67 @@ const useFileUpload = () => {
                     if (line.__EMPTY_1 === 'Nome do Cliente') {
                         isCustomerName = true;
                     }
+                    
                     if (index > indexBegin && index < indexLast) {
-                        let aporte = {};
+                        let operation = {};
                         const dateOperation = line.__EMPTY_1 && line.__EMPTY_1.trim();
-                        aporte.data = dateOperation && Date.FROM_STRING(dateOperation);
-                        aporte.operacao = line.__EMPTY_3 && line.__EMPTY_3.trim(); // compra/venda
-                        aporte.ticket = line.__EMPTY_6; // compra/venda
-                        aporte.qtde = line.__EMPTY_8; // quantidade
-                        aporte.price = line.__EMPTY_9; // valor unidade
-                        aporte.total = line.__EMPTY_10; // total
-                        aporte.isFII = !!b3Fiis.find(f => f.code === aporte.ticket);
-                        setOperations(previousState => previousState.concat(aporte));
-                        setPurchaseCost(pr => aporte.operacao === 'C' ? pr + aporte.total : pr - aporte.total);
-                        setSimbols(prev => prev.concat(aporte.ticket));
+                        operation.data = dateOperation && Date.FROM_STRING(dateOperation);
+                        operation.operacao = line.__EMPTY_3 && line.__EMPTY_3.trim(); // compra/venda
+                        operation.ticket = line.__EMPTY_6; // compra/venda
+                        if (operation.ticket.indexOf('F', 5) !== -1) {
+                            operation.ticket = operation.ticket.slice(0, 5);
+                        } else if (operation.ticket.length > 5 && operation.ticket.indexOf('1', 5) === -1) {
+                            operation.ticket = operation.ticket.slice(0, 5) + '1';
+                            operation.isSubscription = true;
+                        }
+                        operation.qtde = line.__EMPTY_8; // quantidade
+                        operation.price = line.__EMPTY_9; // valor unidade
+                        operation.total = line.__EMPTY_10; // total
+                        operation.isFII = !!b3Fiis.find(f => f.code === operation.ticket);
+                        
+                        setOperations(previousState => previousState.concat(operation));
+                        
+                        setPurchaseCost(prevState => {
+                            const sum = operation.operacao === 'C'
+                                ? SUM(prevState, operation.total).value
+                                : !operation.isSubscription ? DIVIDER(prevState, operation.total).value : prevState;
+                            return sum
+                        });
+                        
+                        let index = null;
+                        let stock = stocksOperation.find((s, i) => {
+                            index = i;
+                            return s.ticket === operation.ticket
+                        });
+                        if (stock) {
+                            if (operation.operacao === 'C') {
+                                stock.qtde += operation.qtde;
+                                stock.total = Math.round((stock.total + operation.total) * 100) / 100;
+                            } else {
+                                stock.qtde -= operation.qtde;
+                                if (stock.qtde === 0) {
+                                    stocksOperation.splice(index, 1);
+                                } else {
+                                    stock.total = Math.round((stock.total - operation.total) * 100) / 100;
+                                }
+                            }
+                        } else {
+                            stocksOperation.push(Object.assign('', operation));
+                        }
                     }
-                })
+                });
+                
+                setStocks(stocksOperation.sort((a, b) => a.ticket - b.ticket));
+                const sumTotal = stocksOperation.reduce((a, b) => {
+                    return a.add(b.total);
+                }, SUM(0, 0));
+                setTotal(sumTotal);
             });
+            
         }
         setLoadingFile(false);
         setOperations(prev => prev.sort((a, b) => b.data - a.data));
     }, [fileCEI]);
-    
-    useEffect(()=> {
-        if (simbols && simbols.length > 0) {
-            googleFinance.companyNews({
-                symbols: simbols
-            }, function (err, result) {
-                if (err) { throw err; }
-                console.log(result);
-            });
-        }
-    },[simbols])
     
     const onChangeHandler = event => {
         setOperations([]);
@@ -94,6 +125,7 @@ const useFileUpload = () => {
         dividends,
         profit,
         purchaseCost,
+        stocks,
         
         onChangeHandler
     }
