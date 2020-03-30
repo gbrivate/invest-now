@@ -89,8 +89,9 @@ const useFileUpload = () => {
                                         stock.averagePrice = stock.total / stock.qtde;
                                     }
                                     if (stock.total < 0) {
-                                        stock.profit = stock.total;
-                                        setProfit(prevState => prevState + Math.abs(stock.total))
+                                        if (!stock.profit) stock.profit = 0;
+                                        stock.profit = stock.profit + Math.abs(stock.total);
+                                        setProfit(prevState => prevState + stock.profit);
                                     }
                                 }
                             } else {
