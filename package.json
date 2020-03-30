@@ -46,6 +46,7 @@
   },
   "homepage": "http://gbrivate.github.io/invest-now",
   "devDependencies": {
+    "@material-ui/codemod": "^4.5.0",
     "gh-pages": "^2.2.0"
   }
 }
