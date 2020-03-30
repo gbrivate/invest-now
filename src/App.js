@@ -178,8 +178,10 @@ const App = () => {
                                     <TableHead>
                                         <TableRow>
                                             <TableCell align="center">Ativo</TableCell>
-                                            <TableCell align="center">Quantidade</TableCell>
-                                            <TableCell align="right">Valor</TableCell>
+                                            <TableCell align="right">Preço</TableCell>
+                                            <TableCell align="center">Qtde</TableCell>
+                                            <TableCell align="right">P/M</TableCell>
+                                            <TableCell align="right">Lucro</TableCell>
                                             <TableCell align="right">Total</TableCell>
                                         </TableRow>
                                     </TableHead>
@@ -187,9 +189,11 @@ const App = () => {
                                         {stocks.map((operation, index) => (
                                             <TableRow key={index}>
                                                 <TableCell align="center">{operation.ticket}</TableCell>
+                                                <TableCell align="right">{REAL(operation.price,false)}</TableCell>
                                                 <TableCell align="center">{operation.qtde}</TableCell>
-                                                <TableCell align="right">{REAL(operation.price)}</TableCell>
-                                                <TableCell align="right">{REAL(operation.total)}</TableCell>
+                                                <TableCell align="right">{REAL(operation.averagePrice,false)}</TableCell>
+                                                <TableCell align="right">{REAL(operation.profit,false)}</TableCell>
+                                                <TableCell align="right">{REAL(operation.total,false)}</TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>
@@ -210,7 +214,7 @@ const App = () => {
                                             <TableCell>Ativo</TableCell>
                                             <TableCell align="center">Operação</TableCell>
                                             <TableCell align="center">Quantidade</TableCell>
-                                            <TableCell align="right">Valor</TableCell>
+                                            <TableCell align="right">Preço</TableCell>
                                             <TableCell align="right">Total</TableCell>
                                         </TableRow>
                                     </TableHead>

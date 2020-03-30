@@ -68,25 +68,34 @@ const useFileUpload = () => {
                             return sum
                         });
                         
-                        let index = null;
-                        let stock = stocksOperation.find((s, i) => {
-                            index = i;
-                            return s.ticket === operation.ticket
-                        });
-                        if (stock) {
-                            if (operation.operacao === 'C') {
-                                stock.qtde += operation.qtde;
-                                stock.total = Math.round((stock.total + operation.total) * 100) / 100;
-                            } else {
-                                stock.qtde -= operation.qtde;
-                                if (stock.qtde === 0) {
-                                    stocksOperation.splice(index, 1);
+                        if (!operation.isSubscription) {
+                            let index = null;
+                            let stock = stocksOperation.find((s, i) => {
+                                index = i;
+                                return s.ticket === operation.ticket
+                            });
+                            if (stock) {
+                                if (operation.operacao === 'C') {
+                                    stock.qtde += operation.qtde;
+                                    stock.total = Math.round((stock.total + operation.total) * 100) / 100;
+                                    stock.averagePrice = stock.total / stock.qtde;
                                 } else {
-                                    stock.total = Math.round((stock.total - operation.total) * 100) / 100;
+                                    stock.qtde -= operation.qtde;
+                                    if (stock.qtde === 0) {
+                                        stocksOperation.splice(index, 1);
+                                        stock.profit = 0;
+                                    } else {
+                                        stock.total = Math.round((stock.total - operation.total) * 100) / 100;
+                                        stock.averagePrice = stock.total / stock.qtde;
+                                    }
+                                    if (stock.total < 0) {
+                                        stock.profit = stock.total;
+                                        setProfit(prevState => prevState + Math.abs(stock.total))
+                                    }
                                 }
+                            } else {
+                                stocksOperation.push(Object.assign('', operation));
                             }
-                        } else {
-                            stocksOperation.push(Object.assign('', operation));
                         }
                     }
                 });
