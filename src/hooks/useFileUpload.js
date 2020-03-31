@@ -57,15 +57,17 @@ export const useFileUpload = () => {
     }, [fileCEI]);
     
     const onChangeHandler = event => {
-        setOperations([]);
-        const input = event.target;
-        const reader = new FileReader();
-        reader.onload = () => {
-            const fileData = reader.result;
-            const wb = XLSX.read(fileData, {type: 'binary'});
-            setFileCEI(wb);
-        };
-        reader.readAsBinaryString(input.files[0]);
+        if (event.target) {
+            setOperations([]);
+            const input = event.target;
+            const reader = new FileReader();
+            reader.onload = () => {
+                const fileData = reader.result;
+                const wb = XLSX.read(fileData, {type: 'binary'});
+                setFileCEI(wb);
+            };
+            reader.readAsBinaryString(input.files[0]);
+        }
     };
     
     return {
